@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, ChangeEvent } from 'react';
 import { useApp } from '../App.tsx';
 import { Sparkles, Send, BookOpen, BrainCircuit, History, ArrowRight, Loader2, Image as ImageIcon, X } from 'lucide-react';
 import { solveDoubt, generateQuizQuestions } from '../services/geminiService.ts';
@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 
 export default function AIHub() {
-  const { translate } = useApp();
+  const { state, translate } = useApp();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'ask' | 'generate'>('ask');
   const [input, setInput] = useState('');
@@ -16,7 +16,7 @@ export default function AIHub() {
   const [selectedImage, setSelectedImage] = useState<{ data: string, mimeType: string } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       if (file.size > 5 * 1024 * 1024) {
@@ -34,10 +34,12 @@ export default function AIHub() {
     }
   };
 
-  const handleAsk = async () => {
-    if (!input.trim() && !selectedImage) return;
+  const handleAsk = async (explicitInput?: string) => {
+    const query = explicitInput || input;
+    if (!query.trim() && !selectedImage) return;
     setLoading(true);
-    const res = await solveDoubt(input, selectedImage ? { inlineData: selectedImage } : undefined);
+    setResponse(null); // Clear previous response
+    const res = await solveDoubt(query, selectedImage ? { inlineData: selectedImage } : undefined, state.language);
     setResponse(res || null);
     
     // Save to Cloud
@@ -52,10 +54,12 @@ export default function AIHub() {
     setLoading(false);
   };
 
-  const handleGenerateTest = async () => {
-    if (!input.trim()) return;
+  const handleGenerateTest = async (explicitInput?: string) => {
+    const query = explicitInput || input;
+    if (!query.trim()) return;
     setLoading(true);
-    const questions = await generateQuizQuestions(input, 10);
+    setResponse(null);
+    const questions = await generateQuizQuestions(query, 10, state.language);
     if (questions.length > 0) {
       // Save to Cloud
       await saveToCloud('quiz', {
@@ -156,7 +160,7 @@ export default function AIHub() {
                 </>
               )}
               <button
-                onClick={activeTab === 'ask' ? handleAsk : handleGenerateTest}
+                onClick={() => activeTab === 'ask' ? handleAsk() : handleGenerateTest()}
                 disabled={loading || (!input.trim() && !selectedImage)}
                 className="p-3 bg-indigo-600 text-white rounded-xl shadow-lg disabled:opacity-50 transition-transform active:scale-95"
               >
@@ -227,7 +231,11 @@ export default function AIHub() {
           {["Article 370", "AI in India", "Monetary Policy", "Sustainable Goals"].map((topic) => (
             <button
               key={topic}
-              onClick={() => setInput(topic)}
+              onClick={() => {
+                setInput(topic);
+                if (activeTab === 'ask') handleAsk(topic);
+                else handleGenerateTest(topic);
+              }}
               className="px-4 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-full text-xs font-bold hover:border-indigo-500 transition-all flex items-center gap-2"
             >
               {topic} <ArrowRight size={14} />

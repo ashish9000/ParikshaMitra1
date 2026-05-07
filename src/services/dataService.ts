@@ -39,6 +39,38 @@ export const getMockCurrentAffairs = (): any[] => [
 
 export const getMockQuizzes = (): any[] => [
   {
+    id: 'pyq_ssc_2023',
+    examType: 'SSC',
+    subject: 'General Awareness',
+    title: 'SSC CGL 2023 Previous Year Paper',
+    durationMinutes: 15,
+    questionsCount: 12,
+  },
+  {
+    id: 'pyq_upsc_2022',
+    examType: 'UPSC',
+    subject: 'History & Culture',
+    title: 'UPSC Prelims 2022 PYQ',
+    durationMinutes: 20,
+    questionsCount: 10,
+  },
+  {
+    id: 'pyq_rrb_2021',
+    examType: 'Railway',
+    subject: 'General Science',
+    title: 'RRB NTPC 2021 Previous Paper',
+    durationMinutes: 10,
+    questionsCount: 10,
+  },
+  {
+    id: 'pyq_bpsc_68',
+    examType: 'Bihar Exams',
+    subject: 'Bihar Special',
+    title: '68th BPSC Previous Year Paper',
+    durationMinutes: 25,
+    questionsCount: 10,
+  },
+  {
     id: 'q1',
     examType: 'SSC',
     subject: 'History',

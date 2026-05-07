@@ -14,6 +14,7 @@ export default function Layout() {
     { path: '/ai-hub', icon: Sparkles, labelEn: 'AI Hub', labelHi: 'AI हब' },
     { path: '/affairs', icon: Newspaper, labelEn: 'Affairs', labelHi: 'करेंट' },
     { path: '/jobs', icon: Bell, labelEn: 'Jobs', labelHi: 'जॉब्स' },
+    { path: '/settings', icon: Settings, labelEn: 'Settings', labelHi: 'सेटिंग्स' },
   ];
 
   return (
@@ -35,14 +36,6 @@ export default function Layout() {
               <Languages size={20} />
               <span className="text-xs font-medium">{state.language === 'en' ? 'हिं' : 'EN'}</span>
             </button>
-            <NavLink
-              to="/settings"
-              className={({ isActive }) => 
-                cn("p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors", isActive && "text-blue-600 bg-blue-50")
-              }
-            >
-              <Settings size={20} />
-            </NavLink>
           </div>
         </div>
       </header>

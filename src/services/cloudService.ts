@@ -32,10 +32,12 @@ export const fetchNewsAPI = async () => {
   if (!API_KEY) return null;
 
   try {
-    const url = `https://newsapi.org/v2/top-headlines?country=in&category=general&apiKey=${API_KEY}`;
+    // newsdata.io endpoint for Indian Exam news
+    // Format: https://newsdata.io/api/1/news?apikey=YOUR_API_KEY&q=exam%20india&country=in&language=en,hi
+    const url = `https://newsdata.io/api/1/news?apikey=${API_KEY}&q=exam%20india&country=in`;
     const response = await fetch(url);
     const data = await response.json();
-    return data.articles;
+    return data.results; // newsdata.io returns "results" instead of "articles"
   } catch (error) {
     console.error("News API Error:", error);
     return null;

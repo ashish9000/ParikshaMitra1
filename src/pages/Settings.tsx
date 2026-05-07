@@ -36,14 +36,13 @@ export default function Settings() {
       ]
     },
     {
-      title: translate('Membership', 'सदस्यता'),
+      title: translate('Cloud & Backup', 'क्लाउड और बैकअप'),
       items: [
         { 
-          label: translate('Upgrade to Premium', 'प्रीमियम में अपग्रेड करें'), 
-          icon: Star, 
-          highlight: true,
-          value: state.isPremium ? translate('Active', 'सक्रिय') : translate('Get Started', 'शुरू करें'),
-          action: handlePremiumToggle
+          label: translate('Google Sheet Sync', 'गूगल शीट सिंक'), 
+          icon: ShieldCheck, 
+          value: import.meta.env.VITE_GOOGLE_SCRIPT_URL ? translate('Connected', 'कनेक्टेड') : translate('Not Set', 'सेट नहीं है'),
+          description: translate('Check docs/SETUP_GUIDE.md & add URL to Secrets', 'docs/SETUP_GUIDE.md देखें और Secrets में URL जोड़ें')
         },
       ]
     },
@@ -66,11 +65,6 @@ export default function Settings() {
           <div className="w-24 h-24 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-slate-400 font-black text-3xl">
             S
           </div>
-          {state.isPremium && (
-            <div className="absolute bottom-0 right-0 w-8 h-8 rounded-full bg-amber-500 border-4 border-slate-50 dark:border-slate-950 flex items-center justify-center text-white">
-              <Star size={14} fill="currentColor" />
-            </div>
-          )}
         </div>
         <div>
           <h2 className="text-2xl font-black tracking-tight">Shishir Gupta</h2>
@@ -103,7 +97,10 @@ export default function Settings() {
                     )}>
                       <item.icon size={20} />
                     </div>
-                    <span className="font-bold text-sm">{item.label}</span>
+                    <div className="flex flex-col items-start text-left">
+                      <span className="font-bold text-sm">{item.label}</span>
+                      {item.description && <span className="text-[10px] text-slate-400 font-medium">{item.description}</span>}
+                    </div>
                   </div>
                   
                   <div className="flex items-center gap-3">
