@@ -25,32 +25,118 @@ const FULL_QUIZ_DATA: Record<string, Quiz> = {
         explanation: 'Warren Hastings was the first Governor-General of Bengal (1773-1785).'
       },
       {
-        id: '2',
+        id: '1-2',
         text: 'In which year was the Indian National Congress founded?',
         options: ['1885', '1890', '1905', '1915'],
         correctAnswer: 0,
         explanation: 'The INC was founded in December 1885 by A.O. Hume.'
       },
       {
-        id: '3',
+        id: '1-3',
         text: 'Who gave the slogan "Swaraj is my birthright and I shall have it"?',
         options: ['Mahatma Gandhi', 'Subhas Chandra Bose', 'Bal Gangadhar Tilak', 'Lala Lajpat Rai'],
         correctAnswer: 2,
         explanation: 'Bal Gangadhar Tilak proclaimed this slogan in 1916.'
       },
       {
-        id: '4',
+        id: '1-4',
         text: 'The Jallianwala Bagh massacre took place in which city?',
         options: ['Lahore', 'Amritsar', 'Delhi', 'Lucknow'],
         correctAnswer: 1,
         explanation: 'The massacre occurred on April 13, 1919, in Amritsar, Punjab.'
       },
       {
-        id: '5',
+        id: '1-5',
         text: 'Who founded the Azad Hind Fauj?',
         options: ['Jawaharlal Nehru', 'Bhagat Singh', 'Subhas Chandra Bose', 'Rash Behari Bose'],
         correctAnswer: 2,
         explanation: 'Subhas Chandra Bose revitalized the Indian National Army (Azad Hind Fauj) in Singapore in 1943.'
+      }
+    ]
+  },
+  'q2': {
+    id: 'q2',
+    examType: 'UPSC',
+    subject: 'Polity',
+    title: 'Indian Constitution & Articles',
+    durationMinutes: 15,
+    questionsCount: 5,
+    questions: [
+      {
+        id: '2-1',
+        text: 'Which article of the Indian Constitution deals with Right to Equality?',
+        options: ['Article 12', 'Article 14', 'Article 19', 'Article 21'],
+        correctAnswer: 1,
+        explanation: 'Article 14 guarantees equality before the law.'
+      },
+      {
+        id: '2-2',
+        text: 'The concept of "Directive Principles of State Policy" was borrowed from which country?',
+        options: ['USA', 'UK', 'Ireland', 'Canada'],
+        correctAnswer: 2,
+        explanation: 'DPSP was inspired by the Irish Constitution.'
+      },
+      {
+        id: '2-3',
+        text: 'Who acts as the Chairman of the Rajya Sabha?',
+        options: ['President', 'Prime Minister', 'Vice President', 'Speaker'],
+        correctAnswer: 2,
+        explanation: 'The Vice President of India is the ex-officio Chairman of the Rajya Sabha.'
+      }
+    ]
+  },
+  'q3': {
+    id: 'q3',
+    examType: 'Railway',
+    subject: 'Science',
+    title: 'Human Biology & Health',
+    durationMinutes: 10,
+    questionsCount: 3,
+    questions: [
+      {
+        id: '3-1',
+        text: 'Which is the largest organ in the human body?',
+        options: ['Liver', 'Heart', 'Skin', 'Lungs'],
+        correctAnswer: 2,
+        explanation: 'The skin is the largest organ of the human body.'
+      },
+      {
+        id: '3-2',
+        text: 'What is the powerhouse of the cell?',
+        options: ['Nucleus', 'Ribosome', 'Mitochondria', 'Golgi Body'],
+        correctAnswer: 2,
+        explanation: 'Mitochondria are known as the powerhouse of the cell.'
+      }
+    ]
+  },
+  'q5': {
+    id: 'q5',
+    examType: 'Bihar Exams',
+    subject: 'GK',
+    title: 'Bihar History & Geography',
+    durationMinutes: 15,
+    questionsCount: 5,
+    questions: [
+      {
+        id: '5-1',
+        text: 'Where was Lord Mahavira born?',
+        options: ['Vaishali', 'Pataliputra', 'Gaya', 'Rajgir'],
+        correctAnswer: 0,
+        explanation: 'Lord Mahavira was born in Kundagrama, near Vaishali.'
+      },
+      {
+        id: '5-2',
+        text: 'Which is the largest river in Bihar?',
+        options: ['Kosi', 'Ganges', 'Gandak', 'Son'],
+        correctAnswer: 1,
+        explanation: 'The Ganges is the main and largest river flowing through Bihar.'
+      },
+      {
+        id: '5-3',
+        text: 'Who was the first Chief Minister of Bihar?',
+        options: ['Anugrah Narayan Sinha', 'Sri Krishna Singh', 'Harihar Singh', 'Abdul Ghafoor'],
+        correctAnswer: 1,
+        explanation: 'Dr. Sri Krishna Singh was the first Chief Minister of Bihar.'
       }
     ]
   }
@@ -69,6 +155,17 @@ export default function QuizRunner() {
   const [questionsOrder, setQuestionsOrder] = useState<number[]>([]);
   
   useEffect(() => {
+    if (id === 'ai-custom') {
+      const saved = sessionStorage.getItem('ai_custom_quiz');
+      if (saved) {
+        setQuiz(JSON.parse(saved));
+        const q = JSON.parse(saved) as Quiz;
+        setTimeLeft(q.durationMinutes * 60);
+        setQuestionsOrder([...Array(q.questions.length).keys()]);
+        return;
+      }
+    }
+    
     if (id && FULL_QUIZ_DATA[id]) {
       const q = FULL_QUIZ_DATA[id];
       setQuiz(q);

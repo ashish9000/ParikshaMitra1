@@ -7,6 +7,7 @@ import QuizRunner from './pages/QuizRunner.tsx';
 import CurrentAffairs from './pages/CurrentAffairs.tsx';
 import JobAlerts from './pages/JobAlerts.tsx';
 import Settings from './pages/Settings.tsx';
+import AIHub from './pages/AIHub.tsx';
 import Layout from './components/Layout.tsx';
 
 interface AppContextType {
@@ -60,6 +61,7 @@ export default function App() {
             <Route path="affairs" element={<CurrentAffairs />} />
             <Route path="jobs" element={<JobAlerts />} />
             <Route path="settings" element={<Settings />} />
+            <Route path="ai-hub" element={<AIHub />} />
           </Route>
           <Route path="quiz/:id" element={<QuizRunner />} />
           <Route path="*" element={<Navigate to="/" replace />} />

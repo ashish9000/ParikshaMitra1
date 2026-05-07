@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
+import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import { useApp } from '../App.tsx';
 import { Quiz } from '../types.ts';
 import { getMockQuizzes } from '../services/dataService.ts';
-import { Clock, BookOpen, ChevronRight, Lock } from 'lucide-react';
+import { Clock, BookOpen, ChevronRight, Lock, Sparkles } from 'lucide-react';
 
 export default function QuizList() {
   const { translate, state } = useApp();
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const category = searchParams.get('category');
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
@@ -27,6 +28,25 @@ export default function QuizList() {
           {translate("Practice with top quality questions", "उच्च गुणवत्ता वाले प्रश्नों के साथ अभ्यास करें")}
         </p>
       </header>
+
+      {/* AI Generate Section */}
+      <div 
+        onClick={() => navigate('/ai-hub')}
+        className="bg-gradient-to-r from-indigo-600 to-purple-600 p-6 rounded-3xl text-white cursor-pointer hover:shadow-lg hover:shadow-indigo-500/20 transition-all group"
+      >
+        <div className="flex items-center justify-between">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <Sparkles size={18} className="animate-pulse" />
+              <h3 className="font-bold">{translate("Generate custom AI Mock Test", "कस्टम AI मॉक टेस्ट बनाएं")}</h3>
+            </div>
+            <p className="text-white/70 text-xs font-medium">
+              {translate("Practice any topic with customized AI questions.", "कस्टम AI सवालों के साथ किसी भी विषय का अभ्यास करें।")}
+            </p>
+          </div>
+          <ChevronRight size={24} className="group-hover:translate-x-1 transition-transform" />
+        </div>
+      </div>
 
       <div className="space-y-4">
         {quizzes.length === 0 ? (

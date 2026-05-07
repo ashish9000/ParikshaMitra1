@@ -1,5 +1,5 @@
 import { Outlet, NavLink, useLocation } from 'react-router-dom';
-import { Home, ClipboardList, Newspaper, Bell, Settings, Languages } from 'lucide-react';
+import { Home, ClipboardList, Newspaper, Bell, Settings, Languages, Sparkles } from 'lucide-react';
 import { useApp } from '../App.tsx';
 import { cn } from '../lib/utils.ts';
 import { motion, AnimatePresence } from 'motion/react';
@@ -11,9 +11,9 @@ export default function Layout() {
   const navItems = [
     { path: '/', icon: Home, labelEn: 'Home', labelHi: 'होम' },
     { path: '/quizzes', icon: ClipboardList, labelEn: 'Tests', labelHi: 'टेस्ट' },
+    { path: '/ai-hub', icon: Sparkles, labelEn: 'AI Hub', labelHi: 'AI हब' },
     { path: '/affairs', icon: Newspaper, labelEn: 'Affairs', labelHi: 'करेंट' },
     { path: '/jobs', icon: Bell, labelEn: 'Jobs', labelHi: 'जॉब्स' },
-    { path: '/settings', icon: Settings, labelEn: 'Settings', labelHi: 'सेटिंग्स' },
   ];
 
   return (
@@ -35,11 +35,14 @@ export default function Layout() {
               <Languages size={20} />
               <span className="text-xs font-medium">{state.language === 'en' ? 'हिं' : 'EN'}</span>
             </button>
-            {state.isPremium && (
-              <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 text-[10px] font-bold uppercase tracking-wider">
-                Premium
-              </span>
-            )}
+            <NavLink
+              to="/settings"
+              className={({ isActive }) => 
+                cn("p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors", isActive && "text-blue-600 bg-blue-50")
+              }
+            >
+              <Settings size={20} />
+            </NavLink>
           </div>
         </div>
       </header>

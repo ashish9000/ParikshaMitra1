@@ -41,9 +41,41 @@ export const getMockQuizzes = (): any[] => [
   {
     id: 'q1',
     examType: 'SSC',
-    subject: 'General Knowledge',
+    subject: 'History',
     title: 'Modern Indian History',
     durationMinutes: 10,
+    questionsCount: 5,
+  },
+  {
+    id: 'q2',
+    examType: 'UPSC',
+    subject: 'Polity',
+    title: 'Indian Constitution & Articles',
+    durationMinutes: 15,
+    questionsCount: 10,
+  },
+  {
+    id: 'q3',
+    examType: 'Railway',
+    subject: 'Science',
+    title: 'Human Biology & Health',
+    durationMinutes: 10,
+    questionsCount: 5,
+  },
+  {
+    id: 'q4',
+    examType: 'Banking',
+    subject: 'Math',
+    title: 'Percentage & Profit Loss',
+    durationMinutes: 20,
+    questionsCount: 10,
+  },
+  {
+    id: 'q5',
+    examType: 'Bihar Exams',
+    subject: 'GK',
+    title: 'Bihar History & Geography',
+    durationMinutes: 15,
     questionsCount: 10,
   }
 ];

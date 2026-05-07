@@ -33,6 +33,30 @@ Open your Google Sheet, go to **Extensions > Apps Script**, and paste the follow
 const NEWS_API_KEY = 'YOUR_NEWS_API_KEY'; // Get from newsapi.org
 const SHEET = SpreadsheetApp.getActiveSpreadsheet();
 
+function doPost(e) {
+  const params = JSON.parse(e.postData.contents);
+  const sheetName = params.type === 'quiz' ? 'quizzes' : 
+                    params.type === 'doubt' ? 'settings' : 'affairs';
+  
+  const sheet = SHEET.getSheetByName(sheetName);
+  
+  if (params.type === 'quiz') {
+    sheet.appendRow([
+      params.data.topic,
+      "AI Generated",
+      `AI: ${params.data.topic}`,
+      10,
+      params.data.questionsCount,
+      JSON.stringify(params.data.questions)
+    ]);
+  } else {
+    sheet.appendRow([new Date(), JSON.stringify(params.data)]);
+  }
+
+  return ContentService.createTextOutput(JSON.stringify({ status: "success" }))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
 function onOpen() {
   const ui = SpreadsheetApp.getUi();
   ui.createMenu('🚀 Pariksha Mitra')

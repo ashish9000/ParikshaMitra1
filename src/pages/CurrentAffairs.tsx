@@ -2,17 +2,34 @@ import { useState, useEffect } from 'react';
 import { useApp } from '../App.tsx';
 import { CurrentAffair } from '../types.ts';
 import { getMockCurrentAffairs } from '../services/dataService.ts';
-import { Calendar, Tag, Share2, Bookmark, ExternalLink } from 'lucide-react';
-import { motion } from 'motion/react';
+import { Calendar, Tag, Share2, Bookmark, ExternalLink, Sparkles, Loader2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
+import { summarizeCurrentAffairs } from '../services/geminiService.ts';
 
 export default function CurrentAffairs() {
   const { translate } = useApp();
   const [affairs, setAffairs] = useState<CurrentAffair[]>([]);
   const [activeTab, setActiveTab] = useState<'daily' | 'weekly' | 'monthly'>('daily');
+  const [summaries, setSummaries] = useState<Record<string, string>>({});
+  const [loadingIds, setLoadingIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     setAffairs(getMockCurrentAffairs());
   }, []);
+
+  const handleSummarize = async (id: string, text: string) => {
+    if (summaries[id]) return;
+    setLoadingIds(prev => new Set(prev).add(id));
+    const summary = await summarizeCurrentAffairs(text);
+    if (summary) {
+      setSummaries(prev => ({ ...prev, [id]: summary }));
+    }
+    setLoadingIds(prev => {
+      const next = new Set(prev);
+      next.delete(id);
+      return next;
+    });
+  };
 
   return (
     <div className="space-y-6">
@@ -77,9 +94,32 @@ export default function CurrentAffairs() {
               {translate(item.contentEn, item.contentHi)}
             </p>
 
-            <button className="w-full py-4 flex items-center justify-center gap-2 text-blue-600 dark:text-blue-400 font-black text-sm uppercase tracking-widest border-t border-slate-50 dark:border-slate-800 pt-4">
-              {translate("Read More", "और पढ़ें")} <ExternalLink size={16} />
-            </button>
+            <AnimatePresence>
+              {summaries[item.id] && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  className="bg-indigo-50/50 dark:bg-indigo-900/10 p-4 rounded-xl text-xs leading-relaxed text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-800"
+                >
+                  <div className="flex items-center gap-2 font-black mb-2 uppercase tracking-widest text-[10px]">
+                    <Sparkles size={12} /> {translate("AI Highlights", "AI मुख्य अंश")}
+                  </div>
+                  <div className="whitespace-pre-wrap">{summaries[item.id]}</div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <div className="flex gap-2 border-t border-slate-50 dark:border-slate-800 pt-4">
+              <button 
+                onClick={() => handleSummarize(item.id, item.contentEn)}
+                className="flex-1 py-3 flex items-center justify-center gap-2 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 font-black text-[10px] uppercase tracking-widest rounded-xl transition-all hover:bg-indigo-100 dark:hover:bg-indigo-900/40"
+              >
+                {loadingIds.has(item.id) ? <Loader2 className="animate-spin" size={14} /> : <><Sparkles size={14} /> {translate("AI Highlight", "AI मुख्य अंश")}</>}
+              </button>
+              <button className="flex-1 py-3 flex items-center justify-center gap-2 text-blue-600 dark:text-blue-400 font-black text-[10px] uppercase tracking-widest border border-slate-100 dark:border-slate-800 rounded-xl">
+                {translate("Read More", "और पढ़ें")} <ExternalLink size={14} />
+              </button>
+            </div>
           </motion.div>
         ))}
       </div>
