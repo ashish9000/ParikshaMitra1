@@ -1,0 +1,6 @@
+{
+  "name": "ParikshaMitra",
+  "description": "A comprehensive exam preparation app for Indian competitive exams like SSC, UPSC, Railway, and State PCS. Features mock tests, current affairs, and job alerts.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["pwa", "offline-storage", "localization"]
+}
